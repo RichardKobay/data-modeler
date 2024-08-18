@@ -9,7 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Line;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -23,6 +23,8 @@ public class MainController {
     private Button createTableButton;
     @FXML
     private Pane tablesPane;
+    @FXML
+    private Pane linesPane;
 
     private List<Table> tables = new ArrayList<>();
 
@@ -52,12 +54,57 @@ public class MainController {
 
     private void updateTablesView() {
         tablesPane.getChildren().clear();
+        linesPane.getChildren().clear();
+
         for (Table table : tables) {
             VBox tableBox = createTableBox(table);
             tablesPane.getChildren().add(tableBox);
 
             makeTableDraggable(tableBox);
         }
+
+        drawConnections();
+    }
+
+    private void drawConnections() {
+        for (Table table : tables) {
+            for (ForeignKey fk : table.getForeignKeys()) {
+                VBox sourceTableBox = findTableBox(table.getTableName());
+                VBox targetTableBox = findTableBox(fk.getReferencedTableName());
+
+                if (sourceTableBox != null && targetTableBox != null) {
+                    Line connectionLine = createConnectionLine(sourceTableBox, targetTableBox);
+                    linesPane.getChildren().add(connectionLine);
+                }
+            }
+        }
+    }
+
+    private Line createConnectionLine(VBox sourceTableBox, VBox targetTableBox) {
+        Line line = new Line();
+
+        line.startXProperty().bind(sourceTableBox.layoutXProperty().add(sourceTableBox.widthProperty().divide(2)));
+        line.startYProperty().bind(sourceTableBox.layoutYProperty().add(sourceTableBox.heightProperty().divide(2)));
+
+        line.endXProperty().bind(targetTableBox.layoutXProperty().add(targetTableBox.widthProperty().divide(2)));
+        line.endYProperty().bind(targetTableBox.layoutYProperty().add(targetTableBox.heightProperty().divide(2)));
+
+        line.setStyle("-fx-stroke: black; -fx-stroke-width: 2;");
+
+        return line;
+    }
+
+    private VBox findTableBox(String tableName) {
+        for (javafx.scene.Node node : tablesPane.getChildren()) {
+            if (node instanceof VBox) {
+                VBox tableBox = (VBox) node;
+                Label label = (Label) tableBox.getChildren().get(0);
+                if (label.getText().equals("Table: " + tableName)) {
+                    return tableBox;
+                }
+            }
+        }
+        return null;
     }
 
     private VBox createTableBox(Table table) {
