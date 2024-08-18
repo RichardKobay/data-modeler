@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="edu.upvictoria.datamodeler.controllers.CreateTableController" alignment="TOP_CENTER">
+    <children>
+        <Label text="Table Name"/>
+        <TextField fx:id="tableNameField"/>
+
+        <Button text="Add Column" onAction="#handleAddColumnButton"/>
+
+        <VBox fx:id="columnsLayout"/>
+
+        <Button fx:id="saveButton" text="Save" onAction="#handleSaveButton" />
+    </children>
+</VBox>

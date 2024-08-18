@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="edu.upvictoria.datamodeler.controllers.MainController">
+    <Pane fx:id="tablesPane" prefHeight="800" prefWidth="1200">
+        <!-- Tables will be added here -->
+    </Pane>
+    <Button fx:id="createTableButton" layoutX="10" layoutY="10" text="Create Table" onAction="#handleCreateTableButton"/>
+</AnchorPane>
+
+
